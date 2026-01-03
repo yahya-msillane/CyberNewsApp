@@ -10,6 +10,10 @@ import DiscoverScreen from './src/screens/DiscoverScreen';
 import BookmarkScreen from './src/screens/BookmarkScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import ArticleDetailScreen from './src/screens/ArticleDetailScreen';
+import LoginScreen from './src/screens/LoginScreen';
+
+// Import AuthContext
+import { AuthProvider, AuthContext } from './Context/AuthContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -78,31 +82,68 @@ function TabNavigator() {
   );
 }
 
-// Main Stack Navigator (includes tabs + detail screen)
-export default function App() {
+// Authentication Navigator (Login Screen)
+function AuthNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="Login" 
+        component={LoginScreen}
+        options={{ 
+          headerShown: false 
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Main App Navigator that switches between Auth and Main App
+function AppNavigator() {
+  const { user, loading } = React.useContext(AuthContext);
+
+  if (loading) {
+    // You can show a loading screen here
+    return null; // Or return a LoadingScreen component
+  }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen 
-          name="MainTabs" 
-          component={TabNavigator} 
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="ArticleDetail" 
-          component={ArticleDetailScreen}
-          options={{ 
-            title: 'Article Details',
-            headerStyle: {
-              backgroundColor: '#007AFF',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          }}
-        />
-      </Stack.Navigator>
+      {user ? (
+        // User is authenticated - show main app
+        <Stack.Navigator>
+          <Stack.Screen 
+            name="MainTabs" 
+            component={TabNavigator} 
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen 
+            name="ArticleDetail" 
+            component={ArticleDetailScreen}
+            options={{ 
+              title: 'Article Details',
+              headerStyle: {
+                backgroundColor: '#007AFF',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          />
+        </Stack.Navigator>
+      ) : (
+        // User is not authenticated - show login screen
+        <AuthNavigator />
+      )}
     </NavigationContainer>
+  );
+}
+
+// Main App Component with AuthProvider
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppNavigator />
+    </AuthProvider>
   );
 }
