@@ -126,9 +126,7 @@ export default function LoginScreen() {
                         style={styles.input}
                         editable={!loading}
                     />
-                    <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPassword}>
-                        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-                    </TouchableOpacity>
+                    
                 </View>
 
                 <TouchableOpacity
@@ -169,7 +167,7 @@ const styles = StyleSheet.create({
     },
     header: {
         
-        paddingTop: 160,
+        paddingTop: 180,
         paddingHorizontal: 24,
         paddingBottom: 40,
         backgroundColor: '#f8f9fa',

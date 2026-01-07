@@ -69,7 +69,19 @@ export default function HomeScreen({ navigation }) {
   const fetchNews = async () => {
     setLoading(true);
     setError(null);
-    const result = await searchNews('cybersecurity');
+     const cybersecurityTerms = [
+      '"cybersecurity"',          // Exact phrase
+      '"data breach"',
+      '"hacking"',
+      '"ransomware"',
+      '"malware attack"',
+      '"phishing"',
+      '"zero-day"',
+      '"cyber attack"',
+      '"network security"',
+      '"information security"'
+    ];
+    const result = await searchNews(cybersecurityTerms.join(' OR '));
     if (result.success) {
       const filteredArticles = result.articles.filter(
         article => article.urlToImage && article.urlToImage !== null
